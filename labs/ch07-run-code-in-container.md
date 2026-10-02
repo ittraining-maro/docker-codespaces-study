@@ -660,13 +660,11 @@ curl -s -X POST localhost:8000/api/ask -H 'Content-Type: application/json' -d '{
 | 指令 | 意義 |
 |---|---|
 | `git log --oneline main..HEAD` | 只列出這條分支比 main 多出來的 commit，應為 **4 個** |
-| `git status` | 應顯示 `working tree clean`；`dev.env` 被忽略，不算變更 |
 
 **複製貼上**：
 
 ```bash
 git log --oneline main..HEAD
-git status
 ```
 
 ✅ **驗收**：

@@ -578,6 +578,7 @@ bash ~/deploy/deploy.sh <舊版 SHA>
 
 ✅ **本章驗收**：
 
-1. 在**部署機**（Blank 範本建立、無原始碼、無 Secret）執行 `deploy.sh <SHA>`，輸出 `✅ 部署完成（live）`
-2. 完成一次「新版 → 回溯舊版」，`/version` 分別顯示兩個 SHA
-3. 完成後已刪除部署機
+1. CI 的 PR 階段全綠且**沒有**推映像；合併後 GHCR 出現 `<SHA>` 與 `latest`
+2. 在**部署機**（Blank 範本建立、無原始碼、無 Secret）執行 `deploy.sh <SHA>`，輸出 `✅ 部署完成（live）`
+3. 完成一次「新版 → 回溯舊版」，`/version` 分別顯示兩個 SHA；完成後已刪除部署機
+4. 打 `v0.1.0` tag 後，GHCR 出現同名 tag

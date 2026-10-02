@@ -37,13 +37,11 @@
 
 | 指令 | 意義 |
 |---|---|
-| `git branch --show-current` | 確認目前在第 7 章的 `feat/ai-demo` 分支 |
 | `code Dockerfile` | 在編輯器中開啟（不存在時建立）repo 根目錄的 `Dockerfile` |
 
 **複製貼上**：
 
 ```bash
-git branch --show-current
 code Dockerfile
 ```
 
@@ -214,7 +212,12 @@ git push -u origin feat/ai-demo
 gh pr create --fill
 ```
 
-✅ **驗收**：五個語意清楚的 commit；`dev.env` 從未出現在任何 commit 中；PR 頁面看得到完整的檔案異動。
+✅ **驗收**：
+
+1. `git log --oneline main..HEAD` 看得到五個語意清楚的 commit（chore / feat / feat / build / build）
+2. `git status` 顯示 working tree clean，且 `dev.env` 從未出現在任何 commit 中
+3. PR 頁面看得到完整的檔案異動
+4. 用手機行動網路（未登入 GitHub）能打開 Public 網址並得到回覆
 
 ---
 
