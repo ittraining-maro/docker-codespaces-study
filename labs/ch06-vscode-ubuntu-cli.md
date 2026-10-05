@@ -136,7 +136,7 @@ echo "hello $NAME"
 
 ---
 
-### 6-5 CLI 綜合練習
+### 6-5 練習
 
 **類型**：CLI Command
 
