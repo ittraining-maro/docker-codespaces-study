@@ -1,7 +1,6 @@
 # 第 8 章　程式碼打包成容器映像 — 實作指令集
 
-> 對應《AI 雲端部署與容器化 — 教學手冊 v1.1》第 8 章。
-> 本檔只收錄要複製貼上的內容；觀念說明請對照手冊。
+> 本檔收錄第 8 章實作時要複製貼上的指令與程式碼；觀念說明請參考課堂簡報。
 
 ---
 
@@ -27,7 +26,7 @@
 
 ---
 
-## 8.2 撰寫 Dockerfile
+## A. 撰寫 Dockerfile
 
 ### 8-1 開啟 `Dockerfile`
 
@@ -117,7 +116,7 @@ git add Dockerfile && git commit -m "build: containerize app with multi-stage bu
 
 ---
 
-## 8.3 建置並執行映像
+## B. 建置並執行映像
 
 ### 8-4 建置映像並啟動容器
 
@@ -188,7 +187,7 @@ docker run -d --name ai-demo -p 8000:8000 --env-file "$REPO/dev.env" ai-demo:dev
 
 ---
 
-## 8.4 把開發成果推上 GitHub
+## C. 把開發成果推上 GitHub
 
 ### 8-7 確認 commit 並推送分支、開 PR
 
@@ -221,7 +220,7 @@ gh pr create --fill
 
 ---
 
-## 8.6 先把開發分支的 PR 合併
+## D. 先把開發分支的 PR 合併
 
 ### 8-8 合併 PR 並更新本地 main
 
@@ -245,7 +244,7 @@ git switch main && git pull
 
 ---
 
-## 8.7 撰寫 CI/CD：`.github/workflows/ci.yml`
+## E. 撰寫 CI/CD：`.github/workflows/ci.yml`
 
 ### 8-9 開新分支並建立 workflow 檔案
 
@@ -440,7 +439,7 @@ git switch main && git pull
 
 ---
 
-## 8.8 讓映像可被取用
+## F. 讓映像可被取用
 
 先在網頁操作：GitHub 個人頁面 → **Packages** 分頁 → 選這個 package → **Package settings** → **Change visibility** → **Public**。
 
@@ -466,7 +465,7 @@ docker pull ghcr.io/<帳號>/<repo>:latest
 
 ---
 
-## 8.9 發版（release）與版本語意
+## G. 發版（release）與版本語意
 
 ### 8-15 打版本 tag 並推送
 

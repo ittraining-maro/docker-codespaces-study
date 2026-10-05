@@ -1,7 +1,6 @@
 # 第 7 章　VS Code 程式碼直接以容器技術執行 — 實作指令集
 
-> 對應《AI 雲端部署與容器化 — 教學手冊 v1.1》第 7 章。
-> 本檔只收錄要複製貼上的內容；觀念說明請對照手冊。
+> 本檔收錄第 7 章實作時要複製貼上的指令與程式碼；觀念說明請參考課堂簡報。
 
 ---
 
@@ -35,7 +34,7 @@ feat/ai-demo 分支
 
 ---
 
-## 7.2 開一條工作分支
+## A. 開一條工作分支
 
 ### 7-1 建立並切換到工作分支
 
@@ -57,7 +56,7 @@ git status
 
 ---
 
-## 7.3 先寫 `.gitignore` 與 `.dockerignore`
+## B. 先寫 `.gitignore` 與 `.dockerignore`
 
 ### 7-2 建立兩個忽略清單並提交（第一個 commit）
 
@@ -111,7 +110,7 @@ git commit -m "chore: ignore secrets and build noise"
 
 ---
 
-## 7.4 `app/llm.py` — provider 抽象層與降級策略
+## C. `app/llm.py` — provider 抽象層與降級策略
 
 ### 7-3 建立 `app` 資料夾並開啟 `llm.py`
 
@@ -139,7 +138,7 @@ code app/llm.py
 
 **功能說明**：
 
-這是聊天機器人的 **LLM 客戶端**，負責「把問題送給大語言模型、拿回答案」。它的設計重點是**不綁定單一供應商**（原則 P6）：只要改環境變數，就能在 Google、Groq、本地 Ollama 之間切換；任何供應商失效時，服務不會整個崩潰，而是降級成示範模式（mock）並說明原因。
+這是聊天機器人的 **LLM 客戶端**，負責「把問題送給大語言模型、拿回答案」。它的設計重點是**不綁定單一供應商**：只要改環境變數，就能在 Google、Groq、本地 Ollama 之間切換；任何供應商失效時，服務不會整個崩潰，而是降級成示範模式（mock）並說明原因。
 
 錯誤被刻意分成兩類，處理方式不同：
 
@@ -308,7 +307,7 @@ git add app/llm.py && git commit -m "feat: add provider-agnostic LLM client with
 
 ---
 
-## 7.5 `app/main.py` — 最小 Web 服務
+## D. `app/main.py` — 最小 Web 服務
 
 ### 7-6 開啟 `main.py`
 
@@ -439,7 +438,7 @@ git add app/main.py && git commit -m "feat: add FastAPI endpoints with health an
 
 ---
 
-## 7.6 相依套件與開發組態
+## E. 相依套件與開發組態
 
 ### 7-9 開啟 `requirements.txt`
 
@@ -547,7 +546,7 @@ git status --short
 
 ---
 
-## 7.7 以容器直接執行程式碼（不打包映像）
+## F. 以容器直接執行程式碼（不打包映像）
 
 ### 7-14 用官方 Python 容器掛載原始碼執行
 
@@ -641,7 +640,7 @@ curl -s -X POST localhost:8000/api/ask -H 'Content-Type: application/json' -d '{
 
 ---
 
-## 7.8 對外公開（臨時展示用）
+## G. 對外公開（臨時展示用）
 
 此節為 GUI 操作，沒有指令：切到 **Ports** 分頁 → 8000 → 點地球圖示開啟；在 port 上按右鍵 → **Port Visibility** 可切換 Private / Public。
 

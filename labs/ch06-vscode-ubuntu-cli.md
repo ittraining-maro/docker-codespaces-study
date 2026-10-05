@@ -1,7 +1,6 @@
 # 第 6 章　Codespace 的雲端版 VS Code 及 Ubuntu CLI 入門 — 實作指令集
 
-> 對應《AI 雲端部署與容器化 — 教學手冊 v1.1》第 6 章。
-> 本檔只收錄要複製貼上的內容；觀念說明請對照手冊。
+> 本檔收錄第 6 章實作時要複製貼上的指令與程式碼；觀念說明請參考課堂簡報。
 
 ---
 
@@ -27,7 +26,7 @@
 
 ---
 
-## 6.2 Ubuntu CLI 入門
+## A. Ubuntu CLI 入門
 
 ### 6-1 確認你所在的環境
 
@@ -66,7 +65,7 @@ echo $CODESPACE_NAME
 
 ⚠️ **貼上前請替換**：`codespaces-lab` 換成你的 repo 名稱（可先執行 `ls /workspaces` 查看）。
 
-> 原則 P5：指令的結果不應取決於隱藏狀態。凡是牽涉設定檔的指令，本課程一律使用絕對路徑。
+> 原則：指令的結果不應取決於隱藏狀態。凡是牽涉設定檔的指令，本課程一律使用絕對路徑。
 
 **複製貼上**：
 
@@ -104,7 +103,7 @@ echo $MY_NAME
 echo $MY_NAME
 ```
 
-> 需要長期保存的設定要寫進檔案，或存成 Codespaces Secret（第 5 章 5.5）。
+> 需要長期保存的設定要寫進檔案，或存成 Codespaces Secret（第 5 章）。
 
 ---
 
@@ -188,7 +187,7 @@ cd ~ && rm -r ~/practice
 
 ---
 
-## 6.3 CLI 實作：驗證 API 金鑰
+## B. CLI 實作：驗證 API 金鑰
 
 > 前提：第 5 章已把 Google AI Studio 金鑰存成 Codespaces Secret `LLM_API_KEY`，並已重新啟動 codespace。
 
@@ -202,7 +201,7 @@ cd ~ && rm -r ~/practice
 |---|---|
 | `echo "${LLM_API_KEY:0:4}****"` | 只顯示金鑰的**前 4 碼**，確認變數有值。**永遠不要輸出完整金鑰** |
 
-顯示 `AIza****` 代表已載入；只顯示 `****` 代表 Secret 沒有生效，請回第 5 章 5.5 重新啟動 codespace。
+顯示 `AIza****` 代表已載入；只顯示 `****` 代表 Secret 沒有生效，請依第 5 章的步驟重新啟動 codespace。
 
 **複製貼上**：
 
@@ -316,7 +315,7 @@ curl -sS https://generativelanguage.googleapis.com/v1beta/openai/chat/completion
 
 ---
 
-## 6.5 Commit 按鈕的陷阱與工作區設定
+## C. Commit 按鈕的陷阱與工作區設定
 
 ### 6-12 建立並開啟工作區設定檔
 
@@ -470,7 +469,7 @@ git push
 
 ---
 
-## 6.6 Git 操作：指令與面板兩種做法
+## D. Git 操作：用終端機完成版本控制
 
 ### 6-18 做法 A：Git 基本循環
 
@@ -550,7 +549,7 @@ gh pr checks
 
 ---
 
-## 6.7 衝突（conflict）怎麼處理
+## E. 衝突（conflict）怎麼處理
 
 ### 6-21 拉取並找出衝突檔案
 
@@ -596,7 +595,7 @@ git commit --no-edit
 
 ---
 
-## 6.8 救命指令
+## F. 救命指令
 
 以下每個區塊對應一種情境，**遇到時才使用**。
 
