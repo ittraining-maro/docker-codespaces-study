@@ -44,12 +44,16 @@ feat/ai-demo 分支
 
 | 指令 | 意義 |
 |---|---|
+| `git switch main && git pull` | 先切回 main，並拉取第 6 章合併後的最新內容，讓新分支從最新的 main 開始 |
 | `git switch -c feat/ai-demo` | 建立 `feat/ai-demo` 分支並切換過去；所有開發都在分支上進行，main 保持可用 |
 | `git status` | 確認分支已切換、工作目錄乾淨 |
+
+> 前提：第 6 章的 PR 已經在網頁上合併。若沒有先切回 main，新分支會建立在第 6 章的 `feature/hello` 上，本章最後驗收的 commit 數會對不上。
 
 **複製貼上**：
 
 ```bash
+git switch main && git pull
 git switch -c feat/ai-demo
 git status
 ```

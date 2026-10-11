@@ -531,7 +531,7 @@ git push -u origin feature/hello
 |---|---|
 | `gh pr create --fill` | 建立 PR，用 commit 訊息自動填入標題與內容 |
 | `gh pr view --web` | 在瀏覽器開啟這個 PR |
-| `gh pr checks` | 查看 PR 上的 CI 檢查是否跑完 |
+| `gh pr checks` | 查看 PR 上的 CI 檢查是否跑完。本章還沒有設定 CI，顯示 `no checks reported` 是正常的 |
 
 **複製貼上**：
 
@@ -546,6 +546,8 @@ gh pr view --web
 ```bash
 gh pr checks
 ```
+
+**接著在網頁上合併 PR**：在 `gh pr view --web` 開啟的 PR 頁面按 **Merge pull request** → **Confirm merge**，完成後 main 分支上就看得到 `hello.py`。
 
 ---
 
