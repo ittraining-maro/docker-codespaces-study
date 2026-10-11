@@ -591,12 +591,6 @@ git status --short
 
 ⚠️ 這個指令會**佔住目前的終端機**持續顯示 log。看到 `Application startup complete` 後，請**另開一個終端機分頁**執行下一步。
 
-⚠️ 若出現 `The container name "/ai-dev" is already in use`：代表之前啟動的容器還在（例如不小心關掉了終端機）。先貼下面這行移除它，再重貼一次本題：
-
-```bash
-docker rm -f ai-dev
-```
-
 **複製貼上**：
 
 ```bash
@@ -607,6 +601,12 @@ docker run --rm -it --name ai-dev -p 8000:8000 \
   -v "$REPO":/srv -w /srv \
   python:3.12-slim \
   sh -c "pip install --no-cache-dir -q -r requirements.txt && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+```
+
+⚠️ 若出現 `The container name "/ai-dev" is already in use`：代表之前啟動的容器還在（例如不小心關掉了終端機）。先貼下面這行移除它，再重貼一次本題：
+
+```bash
+docker rm -f ai-dev
 ```
 
 ---
