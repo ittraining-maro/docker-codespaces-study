@@ -1247,10 +1247,6 @@ curl -s localhost:8000/version       # git_sha 為 dev：這不是一個有版�
 curl -s -X POST localhost:8000/api/ask -H 'Content-Type: application/json' -d '{"prompt":"用一句話解釋容器"}'
 ```
 
-**體驗 `--reload`**：修改 `app/main.py` 中 `SYSTEM_PROMPT` 的預設值並存檔，回到第一個終端機，會看到服務自動重啟；再呼叫一次 `/api/ask`，回應已反映修改。**改程式碼不需要重新建置任何東西**——這就是 Inner Loop 的速度。
-
-⚠️ **體驗完請把 `SYSTEM_PROMPT` 改回原值並存檔**。否則工作目錄會留下未提交的修改，7.8 與 8.4 的驗收（working tree clean、commit 數）都會對不上。
-
 #### 這種做法的意義與限制
 
 | | 本章：掛載原始碼執行 | 第 8 章：打包成映像 |
@@ -1263,8 +1259,6 @@ curl -s -X POST localhost:8000/api/ask -H 'Content-Type: application/json' -d '{
 
 已經得到的好處：**執行環境被容器統一了**。不論 Codespace 本身裝的是哪一版 Python，程式都跑在 `python:3.12-slim` 裡。但它還不是可交付的成品——這正是第 8 章要解決的事。
 
-完成後在第一個終端機按 `Ctrl+C` 停止容器。
-
 ### 7.8 對外公開（臨時展示用）
 
 切到 **Ports** 分頁 → 8000 會自動出現 → 點地球圖示開啟。
@@ -1274,10 +1268,11 @@ curl -s -X POST localhost:8000/api/ask -H 'Content-Type: application/json' -d '{
 
 ⚠️ 這個網址**綁在這台 codespace 上**，停機即失效，只適合臨時展示，**不是部署**。真正的交付在第 8～9 章。
 
+完成後在第一個終端機按 `Ctrl+C` 停止容器（對外公開需要容器仍在執行，所以停止的步驟放在本節最後）。
+
 ✅ **驗收**：
 1. 以官方 Python 容器掛載原始碼，服務正常回應，且 `/version` 的 mode 為 live
-2. 修改程式碼存檔後，服務自動重啟並反映修改
-3. `git log --oneline main..HEAD` 看得到四個 commit，`dev.env` 不在其中
+2. `git log --oneline main..HEAD` 看得到四個 commit，`dev.env` 不在其中
 
 ---
 
@@ -2071,7 +2066,7 @@ docker run --rm -e LLM_PROVIDER=googel ai-demo:dev   # 故意拼錯：容器應�
 
 | 版本 | 日期 | 說明 |
 |---|---|---|
-| 教學手冊 v1.2 | 2026-10-11 | 修正實作銜接：6.6 補上 PR 合併步驟；7.2 開分支前先切回 main；7.7 體驗 `--reload` 後改回 `SYSTEM_PROMPT`；7.4 `mkdir -p app` 移到建檔前；8.9 對第 9 章部署腳本的提前引用移至 9.6；7.1 Inner Loop 敘述改為與第 7 章「掛載原始碼、不 build」的做法一致；9.10 驗收去重；7.8 待實測項目移至附錄 D；8.7 與 9.9 改以 `gh pr checks --watch && gh pr merge` 串接，CI 未通過或尚未開始時不會合併；8.8 補上「等 main 的 CI 完成後 package 才會出現」、9.5 補上金鑰取得位置、9.9 補上確認 CI 紀錄是新合併的提示；附錄 A.2 補上 `ai-demo:dev` 前提、Ollama 安裝缺少 `zstd` 的處理、systemd 警告說明、重啟後重跑 `ollama serve`、首次回應逾時與啟動等待 |
+| 教學手冊 v1.2 | 2026-10-11 | 修正實作銜接：6.6 補上 PR 合併步驟；7.2 開分支前先切回 main；移除 7.7「體驗 `--reload`」練習（非必要，且容易留下未提交的修改，導致 8.6 切換分支失敗），停止容器的步驟移到 7.8 對外公開之後；7.4 `mkdir -p app` 移到建檔前；8.9 對第 9 章部署腳本的提前引用移至 9.6；7.1 Inner Loop 敘述改為與第 7 章「掛載原始碼、不 build」的做法一致；9.10 驗收去重；7.8 待實測項目移至附錄 D；8.7 與 9.9 改以 `gh pr checks --watch && gh pr merge` 串接，CI 未通過或尚未開始時不會合併；8.8 補上「等 main 的 CI 完成後 package 才會出現」、9.5 補上金鑰取得位置、9.9 補上確認 CI 紀錄是新合併的提示；附錄 A.2 補上 `ai-demo:dev` 前提、Ollama 安裝缺少 `zstd` 的處理、systemd 警告說明、重啟後重跑 `ollama serve`、首次回應逾時與啟動等待 |
 | 教學手冊 v1.1 | 2026-10-02 | 依講師實測，主力模型由 Gemma 4 改為 Gemini 3.x Flash-Lite，Gemma 4 降為備援；新增 4.2 模型選擇表；`LLM_MERGE_SYSTEM` 預設改為 `auto`，依模型自動判斷 |
 | 教學手冊 v1.0 | 2026-10-02 | 依課綱教學大綱 1～9 項重新編排《教學平台上手手冊 v6.0》；新增第 1、2 章觀念內容、第 6 章 Ubuntu CLI 入門、第 7 章「掛載原始碼以容器直接執行」 |
 | 上手手冊 v6.0 | 2026-10-02 | 部署段落改以 `make-env.sh`、`deploy.sh` 兩支經測試的腳本承擔 |

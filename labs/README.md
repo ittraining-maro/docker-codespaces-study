@@ -7,7 +7,7 @@
 | 章 | 檔案 | 你會完成什麼 | 題數 |
 |---|---|---|---|
 | 6 | [Codespace 的雲端版 VS Code 及 Ubuntu CLI 入門](ch06-vscode-ubuntu-cli.md) | 熟悉終端機、用 `curl` 驗證 API 金鑰、設定 Git 面板、完成第一個 PR | 6-1～6-28 |
-| 7 | [VS Code 程式碼直接以容器技術執行](ch07-run-code-in-container.md) | 寫出聊天機器人程式，不寫 Dockerfile，直接用官方 Python 容器執行 | 7-1～7-17 |
+| 7 | [VS Code 程式碼直接以容器技術執行](ch07-run-code-in-container.md) | 寫出聊天機器人程式，不寫 Dockerfile，直接用官方 Python 容器執行 | 7-1～7-16 |
 | 8 | [程式碼打包成容器映像](ch08-build-container-image.md) | 撰寫 Dockerfile、建立 CI/CD，把映像自動推上 GHCR 並發版 | 8-1～8-15 |
 | 9 | [以 Codespace 空容器執行映像](ch09-deploy-image-on-blank-codespace.md) | 在沒有原始碼的機器上部署指定版本，並完成一次版本回溯 | 9-1～9-15 |
 | 專案 | [專案實作：大語言模型聊天機器人網站](appA-llm-chatbot-project.md) | 切換 LLM 供應商、建立本地模型保底、整理作品集 | P-1～P-14 |

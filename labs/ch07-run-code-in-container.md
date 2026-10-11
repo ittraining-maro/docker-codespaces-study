@@ -623,40 +623,19 @@ curl -s -X POST localhost:8000/api/ask -H 'Content-Type: application/json' -d '{
 
 ---
 
-### 7-16 體驗 `--reload`
-
-**類型**：操作步驟 + CLI Command
-
-1. 用編輯器修改 `app/main.py` 中 `SYSTEM_PROMPT` 的預設值，例如改成「你是一位樂於助人的助理，請用繁體中文簡潔回答，回答時以『您好』開頭。」並存檔。
-2. 回到第一個終端機，會看到服務自動重啟。
-3. 在第二個終端機再呼叫一次 API，回應已反映修改。
-
-**指令意義**：再次以 POST 送出問題，確認回答已套用新的系統提示。
-
-**複製貼上**：
-
-```bash
-curl -s -X POST localhost:8000/api/ask -H 'Content-Type: application/json' -d '{"prompt":"用一句話解釋容器"}'
-```
-
-> 改程式碼不需要重新建置任何東西——這就是 Inner Loop 的速度。
-> ⚠️ 體驗完請把 `SYSTEM_PROMPT` 改回原值並存檔，否則本章最後的 7-17 驗收 會出現未提交的變更。
-
-完成後回到第一個終端機，按 `Ctrl+C` 停止容器。
-
----
-
 ## G. 對外公開（臨時展示用）
 
 此節為 GUI 操作，沒有指令：切到 **Ports** 分頁 → 8000 → 點地球圖示開啟；在 port 上按右鍵 → **Port Visibility** 可切換 Private / Public。
 
 ⚠️ 這個網址綁在這台 codespace 上，停機即失效，只適合臨時展示，不是部署。
 
+完成後回到第一個終端機（7-14 的那一個），按 `Ctrl+C` 停止容器。
+
 ---
 
 ## 本章驗收
 
-### 7-17 確認分支上的 commit
+### 7-16 確認分支上的 commit
 
 **類型**：CLI Command
 
@@ -675,5 +654,4 @@ git log --oneline main..HEAD
 ✅ **驗收**：
 
 1. 以官方 Python 容器掛載原始碼，服務正常回應，且 `/version` 的 mode 為 live
-2. 修改程式碼存檔後，服務自動重啟並反映修改
-3. `git log --oneline main..HEAD` 看得到四個 commit，`dev.env` 不在其中
+2. `git log --oneline main..HEAD` 看得到四個 commit，`dev.env` 不在其中
