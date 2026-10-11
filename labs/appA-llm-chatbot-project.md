@@ -26,7 +26,7 @@
 
 | 前提 | 來自哪裡 | 怎麼確認 |
 |---|---|---|
-| 本機有 `ai-demo:dev` 映像 | 第 8 章 8-4 建置 | `docker images ai-demo` 看得到 `dev` 這個 tag |
+| 本機有 `ai-demo:dev` 映像 | 第 8 章 8-4 建置 | `docker images ai-demo` 看得到 `dev` 這個 tag。若沒有（例如中途換過 codespace），先執行第 8 章 8-4 重新建置；8-4 啟動的 `ai-demo` 容器會在 P-1 移除 |
 | （選用）已建立 Codespaces Secret `GROQ_API_KEY` | 第 5 章 | 只有要做 P-6 的 Groq 情境才需要 |
 
 ---
@@ -95,12 +95,31 @@ docker rm -f ai-demo 2>/dev/null
 
 ⚠️ 模型檔會佔用 Codespace 的儲存額度，用完請執行 P-13 刪除。下載需要數分鐘。
 
+ℹ️ 安裝過程出現 `WARNING: systemd is not running` 是正常的：Codespace 沒有 systemd，下一行的 `ollama serve` 會手動啟動服務。
+
 **複製貼上**：
 
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
 (ollama serve > /tmp/ollama.log 2>&1 &)
 sleep 3 && ollama pull qwen2.5:0.5b
+```
+
+**若出現 `ERROR: This version requires zstd for extraction`**：代表系統缺少解壓縮工具 `zstd`，安裝已中止（後面兩行也會跟著報錯）。先執行下面這行安裝 `zstd`，**再重新貼一次上面的 P-2 區塊**。
+
+| 指令 | 意義 |
+|---|---|
+| `sudo apt-get update` | 更新 Ubuntu 的套件清單 |
+| `sudo apt-get install -y zstd` | 安裝 `zstd`；`-y` 代表不再詢問、直接安裝 |
+
+```bash
+sudo apt-get update && sudo apt-get install -y zstd
+```
+
+**codespace 停止後再回來繼續**：`ollama serve` 是背景程式，codespace 停止後就會結束（已下載的模型會保留）。重新開啟 codespace 後，先貼下面這行重新啟動服務，再從 P-3 繼續；否則 P-4 會回到示範模式。
+
+```bash
+(ollama serve > /tmp/ollama.log 2>&1 &)
 ```
 
 ---
@@ -138,6 +157,8 @@ docker run -d --name ai-local --network host -e LLM_PROVIDER=ollama ai-demo:dev
 | `curl -s -X POST localhost:8000/api/ask ...` | 送出一個問題 | 回傳本地模型的回答，`is_mock` 為 `false` |
 
 > 服務啟動需要 2～3 秒；若出現 `Connection refused`，稍等再貼一次。2-core 機器上本地模型回答較慢，請耐心等待。
+>
+> 第一次回應最慢（要先把模型載入記憶體）。程式的等待上限是 30 秒，超過會回到示範模式，`reason` 顯示 `連線失敗（APITimeoutError）`；這時模型已經載入，**再貼一次本題**通常就會成功。
 
 **複製貼上**：
 
