@@ -11,7 +11,7 @@
 | 類型 | 是什麼 | 怎麼用 |
 |---|---|---|
 | **CLI Command** | 直接在終端機輸入、立即執行的單行或多行指令 | 複製整個區塊，貼到 VS Code 下方的 **Terminal**，按 Enter |
-| **Bash Script** | 多行指令組成的腳本，存成 `.sh` 檔後用 `bash` 執行 | 本章的區塊會用 here-document 自動把腳本寫成檔案，整段貼到終端機即可 |
+| **Bash Script** | 多行指令組成的腳本，存成 `.sh` 檔後用 `bash` 執行 | 先用 `code` 指令開啟檔案，再把腳本貼到編輯器並存檔（不是貼到終端機） |
 
 > 本章沒有新的 Python Script；部署的是第 8 章推上 GHCR 的映像，部署機上**完全沒有原始碼**。
 
@@ -116,7 +116,7 @@ echo "${LLM_API_KEY:-（空）}"
 
 ## D. 【部署機】安裝部署工具（只需一次）
 
-以下三個區塊都可以**整段一次貼上**（裡面沒有需要輸入的指令），會在 `~/deploy/` 建立兩支腳本：
+這個單元要在 `~/deploy/` 建立兩支腳本。每一支都分兩步：**先用終端機建立並開啟檔案，再把腳本內容貼到編輯器並存檔**（腳本很長，直接貼到終端機容易出錯）。
 
 | 腳本 | 做什麼 | 對應 PaaS 的哪個畫面 |
 |---|---|---|
@@ -125,7 +125,23 @@ echo "${LLM_API_KEY:-（空）}"
 
 ### 9-3 【部署機】建立 `make-env.sh`（部署設定腳本）
 
-**類型**：Bash Script
+**類型**：CLI Command（步驟 1）＋ Bash Script（步驟 2）
+
+**步驟 1：建立資料夾並開啟檔案**
+
+| 指令 | 意義 |
+|---|---|
+| `mkdir -p ~/deploy` | 在家目錄建立放部署工具的 `deploy` 資料夾 |
+| `code ~/deploy/make-env.sh` | 在編輯器中開啟（不存在時建立）`make-env.sh` |
+
+**複製貼上**：
+
+```bash
+mkdir -p ~/deploy
+code ~/deploy/make-env.sh
+```
+
+**步驟 2：把腳本貼到編輯器並存檔**（貼到剛開啟的 `make-env.sh` 分頁，不是貼到終端機）
 
 **腳本意義**：
 
@@ -133,7 +149,6 @@ echo "${LLM_API_KEY:-（空）}"
 
 | 區段 | 意義 |
 |---|---|
-| `cat > ~/deploy/make-env.sh <<'SCRIPT'` … `SCRIPT` | **here-document**：把兩個 `SCRIPT` 之間的內容原封不動寫入檔案，貼上時不會執行 |
 | `#!/usr/bin/env bash` | 第一行（shebang）：指定用 bash 執行這支腳本 |
 | `set -euo pipefail` | 任何一步出錯就立刻停止、使用未定義變數視為錯誤，避免帶著錯誤繼續執行 |
 | `DIR=...`、`CONF=...`、`ENV_FILE=...` | 以腳本所在資料夾為基準，算出設定檔的**絕對路徑** |
@@ -145,17 +160,20 @@ echo "${LLM_API_KEY:-（空）}"
 | `umask 077` + `mktemp` + `mv -f` | **原子性寫入**：先寫暫存檔再改名，權限只有自己可讀寫，不會留下寫到一半的檔案 |
 | 最後的 `echo` | 顯示設定摘要；金鑰只顯示前 4 碼與長度 |
 
-**複製貼上**（整段一次貼上）：
+
+**貼到編輯器並存檔**（`Ctrl+S`；分頁標題上的圓點消失代表已存檔）：
 
 ```bash
-mkdir -p ~/deploy
-cat > ~/deploy/make-env.sh <<'SCRIPT'
 #!/usr/bin/env bash
+# 部署機設定：產生 deploy.conf（要部署哪個 image）與 prod.env（執行期組態）。
+# 用法：bash ~/deploy/make-env.sh        ← 必須單獨執行，不可與其他指令一起貼上
+# 重跑時直接按 Enter 可保留原本的值。
 set -euo pipefail
 DIR="$(cd "$(dirname "$0")" && pwd)"
 CONF="$DIR/deploy.conf"
 ENV_FILE="$DIR/prod.env"
 
+# 清理常見的輸入錯誤：前後空白、Windows 換行、誤加的引號
 clean() {
   local v="${1//$'\r'/}"
   v="${v#"${v%%[![:space:]]*}"}"
@@ -163,17 +181,18 @@ clean() {
   v="${v#\"}"; v="${v%\"}"; v="${v#\'}"; v="${v%\'}"
   printf '%s' "$v"
 }
-
+# 讀取既有值（若有），作為預設值
 old_image=""; old_model=""; old_key=""
 [[ -f "$CONF" ]]     && old_image="$(sed -n 's/^IMAGE=//p' "$CONF")"
 [[ -f "$ENV_FILE" ]] && old_model="$(sed -n 's/^LLM_MODEL=//p' "$ENV_FILE")"
 [[ -f "$ENV_FILE" ]] && old_key="$(sed -n 's/^LLM_API_KEY=//p' "$ENV_FILE")"
 
+# 1. image 路徑
 read -rp "image 路徑，例如 ghcr.io/帳號/repo${old_image:+ [Enter 保留：$old_image]}: " image
 image="$(clean "${image:-$old_image}")"
-image="${image#docker pull }"
+image="${image#docker pull }"                  # 容許直接貼上 Packages 頁面的 docker pull 指令
 image="$(printf '%s' "$image" | tr '[:upper:]' '[:lower:]')"
-if [[ "$image" == ghcr.io/*/*:* ]]; then
+if [[ "$image" == ghcr.io/*/*:* ]]; then        # 誤帶 tag → 自動移除並提醒
   echo "ℹ️  已移除 image 路徑中的 tag「:${image##*:}」，部署時再指定版本"
   image="${image%:*}"
 fi
@@ -181,6 +200,7 @@ if [[ ! "$image" =~ ^ghcr\.io/[a-z0-9._-]+/[a-z0-9._-]+$ ]]; then
   echo "❌ image 路徑格式錯誤：「$image」（應為 ghcr.io/<帳號>/<repo>）" >&2; exit 1
 fi
 
+# 2. API key
 read -rsp "Google AI Studio API key（輸入時不顯示）${old_key:+ [Enter 保留原金鑰]}: " key; echo
 key="$(clean "${key:-$old_key}")"
 [[ -n "$key" ]] || { echo "❌ 金鑰是空的，未寫入任何檔案" >&2; exit 1; }
@@ -188,10 +208,12 @@ if [[ "$key" != AIza* || ${#key} -ne 39 ]]; then
   echo "⚠️  金鑰格式與常見格式不同（開頭 ${key:0:4}、長度 ${#key}），請確認是否貼對" >&2
 fi
 
+# 3. model ID
 read -rp "model ID${old_model:+ [Enter 保留：$old_model]}: " model
 model="$(clean "${model:-$old_model}")"; model="${model#models/}"
 [[ -n "$model" ]] || { echo "❌ model ID 是空的，未寫入任何檔案" >&2; exit 1; }
 
+# 原子性寫入：先寫暫存檔再改名，不會留下寫到一半的檔案
 umask 077
 tmp="$(mktemp "$DIR/.tmp.XXXXXX")"
 printf 'IMAGE=%s\n' "$image" > "$tmp" && mv -f "$tmp" "$CONF"
@@ -203,14 +225,27 @@ echo "   image：$image"
 echo "   model：$model"
 echo "   金鑰 ：${key:0:4}****（長度 ${#key}）"
 echo "   下一步：bash $DIR/deploy.sh <要部署的 SHA 或版本號>"
-SCRIPT
 ```
 
 ---
 
 ### 9-4 【部署機】建立 `deploy.sh`（部署與驗證腳本）
 
-**類型**：Bash Script
+**類型**：CLI Command（步驟 1）＋ Bash Script（步驟 2）
+
+**步驟 1：開啟檔案**
+
+| 指令 | 意義 |
+|---|---|
+| `code ~/deploy/deploy.sh` | 在編輯器中開啟（不存在時建立）`deploy.sh` |
+
+**複製貼上**：
+
+```bash
+code ~/deploy/deploy.sh
+```
+
+**步驟 2：把腳本貼到編輯器並存檔**（貼到剛開啟的 `deploy.sh` 分頁，不是貼到終端機）
 
 **腳本意義**：
 
@@ -229,12 +264,13 @@ SCRIPT
 | **[5/5] 驗證** | ① `docker inspect` 檢查容器**實際收到**的 `LLM_MODEL`、`LLM_API_KEY` 不是空值；② 呼叫 `/version`，若給的是 40 碼 SHA 則比對是否一致；③ 實際呼叫一次 `/api/ask`，若回到示範模式（mock）就顯示供應商的錯誤並判定失敗 |
 | 最後的 `echo` | 顯示部署完成與瀏覽方式 |
 
-**複製貼上**（整段一次貼上）：
+
+**貼到編輯器並存檔**（`Ctrl+S`；分頁標題上的圓點消失代表已存檔）：
 
 ```bash
-mkdir -p ~/deploy
-cat > ~/deploy/deploy.sh <<'SCRIPT'
 #!/usr/bin/env bash
+# 部署指定版本，並自動驗證。這支腳本就是一個最陽春的 PaaS：拉 image → 注入組態 → 啟動 → 健康檢查。
+# 用法：bash ~/deploy/deploy.sh <SHA 或版本號>
 set -euo pipefail
 DIR="$(cd "$(dirname "$0")" && pwd)"
 CONF="$DIR/deploy.conf"
@@ -272,6 +308,7 @@ if ! curl -fsS "localhost:$PORT/healthz" >/dev/null 2>&1; then
 fi
 
 echo "▶ [5/5] 驗證版本與組態"
+# 容器實際收到的組態（而非檔案內容）
 empty="$(docker inspect "$NAME" --format '{{range .Config.Env}}{{println .}}{{end}}' \
          | awk -F= '/^LLM_(MODEL|API_KEY)=/ { if ($2 == "") print $1 }')"
 [[ -z "$empty" ]] || die "容器收到的下列變數為空值：$empty。請重新執行 make-env.sh 後再部署"
@@ -292,7 +329,6 @@ fi
 
 echo "✅ 部署完成：$REF（live）"
 echo "   瀏覽器檢視：下方 Ports 分頁 → $PORT → 地球圖示"
-SCRIPT
 ```
 
 ---

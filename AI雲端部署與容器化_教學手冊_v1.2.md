@@ -1610,12 +1610,20 @@ echo "${LLM_API_KEY:-（空）}"   # 顯示「（空）」：Secret 綁定 repo�
 
 ### 9.4 【部署機】安裝部署工具（只需一次）
 
-以下整段可以**一次貼上**（裡面沒有任何需要輸入的指令）。它會在 `~/deploy/` 建立兩支腳本：
+在 `~/deploy/` 建立兩支腳本。每一支都是**先用終端機建立並開啟檔案，再把腳本內容貼到編輯器並存檔**。
+
+> ⚠️ 不要用 here-document（`cat > file <<'EOF'`）把整支腳本貼進終端機：實測在 Codespaces 的終端機無法順利完成，腳本又長又含特殊字元，容易貼壞。
+
+**① 建立 `make-env.sh`**：
 
 ```bash
-mkdir -p ~/deploy && cd ~/deploy
+mkdir -p ~/deploy
+code ~/deploy/make-env.sh
+```
 
-cat > make-env.sh <<'SCRIPT'
+把下面的內容貼到剛開啟的 `make-env.sh` 分頁並存檔（`Ctrl+S`）：
+
+```bash
 #!/usr/bin/env bash
 # 部署機設定：產生 deploy.conf（要部署哪個 image）與 prod.env（執行期組態）。
 # 用法：bash ~/deploy/make-env.sh        ← 必須單獨執行，不可與其他指令一起貼上
@@ -1677,9 +1685,17 @@ echo "   image：$image"
 echo "   model：$model"
 echo "   金鑰 ：${key:0:4}****（長度 ${#key}）"
 echo "   下一步：bash $DIR/deploy.sh <要部署的 SHA 或版本號>"
-SCRIPT
+```
 
-cat > deploy.sh <<'SCRIPT'
+**② 建立 `deploy.sh`**：
+
+```bash
+code ~/deploy/deploy.sh
+```
+
+把下面的內容貼到剛開啟的 `deploy.sh` 分頁並存檔（`Ctrl+S`）：
+
+```bash
 #!/usr/bin/env bash
 # 部署指定版本，並自動驗證。這支腳本就是一個最陽春的 PaaS：拉 image → 注入組態 → 啟動 → 健康檢查。
 # 用法：bash ~/deploy/deploy.sh <SHA 或版本號>
@@ -1741,9 +1757,12 @@ fi
 
 echo "✅ 部署完成：$REF（live）"
 echo "   瀏覽器檢視：下方 Ports 分頁 → $PORT → 地球圖示"
-SCRIPT
+```
 
-chmod 700 make-env.sh deploy.sh
+**③ 設定權限並確認**：
+
+```bash
+chmod 700 ~/deploy/make-env.sh ~/deploy/deploy.sh
 ls -l ~/deploy                  # 應看到兩支腳本
 ```
 
@@ -2084,7 +2103,7 @@ docker run --rm -e LLM_PROVIDER=googel ai-demo:dev   # 故意拼錯：容器應�
 
 | 版本 | 日期 | 說明 |
 |---|---|---|
-| 教學手冊 v1.2 | 2026-10-11 | 修正實作銜接：6.6 補上 PR 合併步驟；7.2 開分支前先切回 main；移除 7.7「體驗 `--reload`」練習（非必要，且容易留下未提交的修改，導致 8.6 切換分支失敗），停止容器的步驟移到 7.8 對外公開之後；7.4 `mkdir -p app` 移到建檔前；8.9 對第 9 章部署腳本的提前引用移至 9.6；7.1 Inner Loop 敘述改為與第 7 章「掛載原始碼、不 build」的做法一致；9.10 驗收去重；7.8 待實測項目移至附錄 D；8.7 與 9.9 改以 `gh pr checks --watch && gh pr merge` 串接，CI 未通過或尚未開始時不會合併；8.8 補上「等 main 的 CI 完成後 package 才會出現」、9.5 補上金鑰取得位置、9.9 補上確認 CI 紀錄是新合併的提示；8.3 重跑循環標示為「需要時才執行」、8.4 補上 Public 設定未保留時的處理；8.9 補上「等 tag 的 CI 跑完才看得到版本號」；第 9 章開頭補上開發機須在 repo 根目錄執行；7.2、8.7、9.9 補上重貼 `git switch -c` 時會停在 main 的說明與補救；8.3 補上 `docker run -d` 後立即 `docker logs` 可能為空的說明；7.7、8.3 補上容器名稱已被使用時的處理；附錄 A.2 補上 `ai-demo:dev` 前提、Ollama 安裝缺少 `zstd` 的處理、systemd 警告說明、重啟後重跑 `ollama serve`、首次回應逾時與啟動等待 |
+| 教學手冊 v1.2 | 2026-10-11 | 修正實作銜接：6.6 補上 PR 合併步驟；7.2 開分支前先切回 main；移除 7.7「體驗 `--reload`」練習（非必要，且容易留下未提交的修改，導致 8.6 切換分支失敗），停止容器的步驟移到 7.8 對外公開之後；7.4 `mkdir -p app` 移到建檔前；8.9 對第 9 章部署腳本的提前引用移至 9.6；7.1 Inner Loop 敘述改為與第 7 章「掛載原始碼、不 build」的做法一致；9.10 驗收去重；7.8 待實測項目移至附錄 D；8.7 與 9.9 改以 `gh pr checks --watch && gh pr merge` 串接，CI 未通過或尚未開始時不會合併；8.8 補上「等 main 的 CI 完成後 package 才會出現」、9.5 補上金鑰取得位置、9.9 補上確認 CI 紀錄是新合併的提示；8.3 重跑循環標示為「需要時才執行」、8.4 補上 Public 設定未保留時的處理；8.9 補上「等 tag 的 CI 跑完才看得到版本號」；第 9 章開頭補上開發機須在 repo 根目錄執行；7.2、8.7、9.9 補上重貼 `git switch -c` 時會停在 main 的說明與補救；8.3 補上 `docker run -d` 後立即 `docker logs` 可能為空的說明；7.7、8.3 補上容器名稱已被使用時的處理；9.4 兩支腳本改為「用 `code` 開啟檔案，貼到編輯器存檔」，不再用 here-document 貼進終端機；附錄 A.2 補上 `ai-demo:dev` 前提、Ollama 安裝缺少 `zstd` 的處理、systemd 警告說明、重啟後重跑 `ollama serve`、首次回應逾時與啟動等待 |
 | 教學手冊 v1.1 | 2026-10-02 | 依講師實測，主力模型由 Gemma 4 改為 Gemini 3.x Flash-Lite，Gemma 4 降為備援；新增 4.2 模型選擇表；`LLM_MERGE_SYSTEM` 預設改為 `auto`，依模型自動判斷 |
 | 教學手冊 v1.0 | 2026-10-02 | 依課綱教學大綱 1～9 項重新編排《教學平台上手手冊 v6.0》；新增第 1、2 章觀念內容、第 6 章 Ubuntu CLI 入門、第 7 章「掛載原始碼以容器直接執行」 |
 | 上手手冊 v6.0 | 2026-10-02 | 部署段落改以 `make-env.sh`、`deploy.sh` 兩支經測試的腳本承擔 |

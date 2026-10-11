@@ -21,7 +21,7 @@
 | 類型 | 貼到哪裡 |
 |---|---|
 | **CLI Command** | VS Code 下方的 **Terminal**，按 Enter 執行 |
-| **Bash Script** | 同樣貼到 Terminal，會自動寫成 `.sh` 檔 |
+| **Bash Script** | 用編輯器開啟指定的 `.sh` 檔，整段貼上並**存檔**（不是貼到 Terminal） |
 | **Python Script**、**設定檔**、**Markdown 片段** | 用編輯器開啟指定的檔案，整段貼上並**存檔**（不是貼到 Terminal） |
 
 每一題的格式都一樣：**標題 → 說明表格 → 複製貼上的區塊**。先讀說明，再複製區塊；GitHub 上每個區塊右上角都有複製按鈕。
