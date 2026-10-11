@@ -140,6 +140,8 @@ docker run -d --name ai-demo -p 8000:8000 --env-file "$REPO/dev.env" ai-demo:dev
 docker logs ai-demo
 ```
 
+> 容器啟動需要 2～3 秒。若 `docker logs` 還沒顯示含 `mode=live` 的 `startup` 訊息，稍等再單獨執行一次 `docker logs ai-demo` 即可。
+
 ---
 
 ### 8-5 驗證容器
