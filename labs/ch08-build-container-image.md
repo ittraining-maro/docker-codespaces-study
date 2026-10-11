@@ -21,7 +21,7 @@
 1. **一次只貼一個區塊**，看完輸出再貼下一個。
 2. 標示 ⚠️ **貼上前請替換** 的區塊，要先把 `<...>` 換成你自己的內容；`<` `>` 符號本身也要刪掉。
 3. 可複製的 CLI 區塊內刻意不放註解；每個指令的意義都寫在區塊上方的說明表格。
-4. 本章所有指令都在**你的 repo codespace（開發機）** 執行，終端機請位於 repo 根目錄。
+4. 本章所有指令都在**你的 repo codespace（開發機）** 執行，終端機請位於 repo 根目錄（`pwd` 應為 `/workspaces/<repo>`）。若不是，先執行 `cd /workspaces/<repo>`（`<repo>` 換成你的 repo 名稱）。
 5. 開始前請確認第 7 章的 `ai-dev` 容器已用 `Ctrl+C` 停止，否則 8000 埠會被佔用。
 
 ---
@@ -494,6 +494,8 @@ git switch main && git pull
 git tag -a v0.1.0 -m "first working demo"
 git push origin v0.1.0
 ```
+
+⚠️ 推送 tag 會觸發一次 CI，跑完（約 1～3 分鐘，可在 repo 的 **Actions** 分頁確認綠色勾勾）之後，Packages 頁面才會出現 `v0.1.0` 這個 tag。
 
 **三種 tag 的分工**：
 

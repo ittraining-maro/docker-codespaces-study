@@ -232,6 +232,12 @@ curl -s "https://generativelanguage.googleapis.com/v1beta/models?key=$LLM_API_KE
   | python3 -c "import sys,json; [print(m['name'], m.get('supportedGenerationMethods')) for m in json.load(sys.stdin).get('models', [])]"
 ```
 
+**若畫面沒有任何輸出**：代表 API 回傳的是錯誤訊息而不是模型清單（Python 只印模型，所以錯誤被略過了）。貼下面這行看原始回應，再對照 6-11 下方的錯誤碼表：
+
+```bash
+curl -s "https://generativelanguage.googleapis.com/v1beta/models?key=$LLM_API_KEY"
+```
+
 ---
 
 ### 6-9 步驟 2：把 model ID 存成變數
@@ -325,14 +331,16 @@ curl -sS https://generativelanguage.googleapis.com/v1beta/openai/chat/completion
 
 | 指令 | 意義 |
 |---|---|
+| `cd /workspaces/codespaces-lab` | 回到 repo 根目錄。6-6 結束時終端機停在家目錄 `~`，不先回來的話，`.vscode` 會建在家目錄，6-16 的 `git add` 也會失敗 |
 | `mkdir -p .vscode` | 在 repo 根目錄建立 `.vscode` 資料夾 |
 | `code .vscode/settings.json` | 在編輯器中開啟（不存在時建立）`settings.json` |
 
-> 請先確認終端機位於 repo 根目錄（執行 `pwd`，應為 `/workspaces/<repo>`）。
+⚠️ **貼上前請替換**：`codespaces-lab` 換成你的 repo 名稱（同 6-2）。
 
 **複製貼上**：
 
 ```bash
+cd /workspaces/codespaces-lab
 mkdir -p .vscode
 code .vscode/settings.json
 ```
@@ -553,6 +561,8 @@ gh pr checks
 
 ## E. 衝突（conflict）怎麼處理
 
+以下兩題是**分組協作遇到衝突時才使用**的處理步驟；個人練習時不會發生衝突，可以先跳過，直接進行第 7 章。
+
 ### 6-21 拉取並找出衝突檔案
 
 **類型**：CLI Command
@@ -681,3 +691,5 @@ git switch -c rescue <hash>
 ---
 
 ✅ **本章驗收**：用 CLI 與 GUI 各做一次「改檔 → commit → push」，並開出一個 PR 後合併；main 分支上看得到 `hello.py`。
+
+> GUI（Source Control 面板）的做法沒有指令，請依課堂示範操作；本檔收錄的是 CLI 的做法。
