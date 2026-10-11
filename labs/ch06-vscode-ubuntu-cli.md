@@ -232,7 +232,7 @@ curl -s "https://generativelanguage.googleapis.com/v1beta/models?key=$LLM_API_KE
   | python3 -c "import sys,json; [print(m['name'], m.get('supportedGenerationMethods')) for m in json.load(sys.stdin).get('models', [])]"
 ```
 
-**若畫面沒有任何輸出**：代表 API 回傳的是錯誤訊息而不是模型清單（Python 只印模型，所以錯誤被略過了）。貼下面這行看原始回應，再對照 6-11 下方的錯誤碼表：
+**若畫面沒有任何輸出，或出現一大段以 `JSONDecodeError` 結尾的錯誤**：前者代表 API 回傳的是錯誤訊息而不是模型清單（Python 只印模型，所以錯誤被略過了）；後者代表 API 沒有回傳任何內容（例如網路暫時中斷）。兩種情況都貼下面這行看原始回應，再對照 6-11 下方的錯誤碼表；若完全沒有回應，稍等再試一次：
 
 ```bash
 curl -s "https://generativelanguage.googleapis.com/v1beta/models?key=$LLM_API_KEY"
