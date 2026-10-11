@@ -487,6 +487,8 @@ gh pr create --fill
 
 ⚠️ `gh pr checks --watch` 會持續更新畫面，全部顯示 `pass` 後才會繼續執行合併。若出現 `fail`，請按 `Ctrl+C` 中止，先排除錯誤。
 
+⚠️ 若畫面顯示 `no checks reported`，代表 GitHub 還沒開始執行 CI，**不會合併**。等 10～20 秒再貼一次即可。
+
 **複製貼上**：
 
 ```bash

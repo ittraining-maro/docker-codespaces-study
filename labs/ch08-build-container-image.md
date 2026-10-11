@@ -399,7 +399,7 @@ gh pr create --fill
 
 ---
 
-### 8-12 等待 PR 的 CI 完成
+### 8-12 等待 PR 的 CI 通過後合併
 
 **類型**：CLI Command
 
@@ -408,18 +408,22 @@ gh pr create --fill
 | 指令 | 意義 |
 |---|---|
 | `gh pr checks --watch` | 持續顯示 PR 上 CI 的進度，直到全部完成。PR 階段**只建置與測試，不會推映像** |
+| `&&` | 前一個指令成功（CI 全部 `pass`）才執行後面的指令；CI 失敗就**不會合併** |
+| `gh pr merge --merge --delete-branch` | 合併 PR 並刪除遠端分支；合併會產生「推進 main」的事件 |
 
-⚠️ 這個指令會持續更新畫面，等到全部顯示 `pass` 才結束（約 1～3 分鐘）。若出現 `fail`，請先排除錯誤，**不要合併**。
+⚠️ 這個指令會持續更新畫面，等到全部顯示 `pass` 才會接著合併（約 1～3 分鐘）。若出現 `fail`，合併不會執行，請先排除錯誤。
+
+⚠️ 若畫面顯示 `no checks reported`，代表 GitHub 還沒開始執行 CI，**不會合併**。等 10～20 秒再貼一次即可。
 
 **複製貼上**：
 
 ```bash
-gh pr checks --watch
+gh pr checks --watch && gh pr merge --merge --delete-branch
 ```
 
 ---
 
-### 8-13 合併 PR，觸發推送映像
+### 8-13 切回 main，觸發推送映像
 
 **類型**：CLI Command
 
@@ -427,13 +431,11 @@ gh pr checks --watch
 
 | 指令 | 意義 |
 |---|---|
-| `gh pr merge --merge --delete-branch` | 合併 PR 並刪除遠端分支；合併會產生「推進 main」的事件 |
-| `git switch main && git pull` | 切回 main 並同步。**這一次的 main CI 才會推映像到 GHCR** |
+| `git switch main && git pull` | 切回 main 並同步合併結果。**8-12 的合併觸發了 main 的 CI，這一次才會推映像到 GHCR** |
 
 **複製貼上**：
 
 ```bash
-gh pr merge --merge --delete-branch
 git switch main && git pull
 ```
 
