@@ -164,9 +164,11 @@ curl -s localhost:8000/version
 
 ---
 
-### 8-6 改完程式後重建並重跑
+### 8-6 改完程式後重建並重跑（需要時才執行）
 
 **類型**：CLI Command
+
+**適用時機**：修改了程式碼、想看到新結果時才需要執行；第一次照順序練習時可以跳過，直接進行 8-7。
 
 **指令意義**：
 
@@ -217,6 +219,8 @@ gh pr create --fill
 2. `git status` 顯示 working tree clean，且 `dev.env` 從未出現在任何 commit 中
 3. PR 頁面看得到完整的檔案異動
 4. 用手機行動網路（未登入 GitHub）能打開 Public 網址並得到回覆
+
+> 若手機打開時要求登入 GitHub，代表 8000 埠的公開設定沒有保留：到 **Ports** 分頁，在 8000 上按右鍵 → **Port Visibility** → **Public**（做法同第 7 章 G 單元），再試一次。
 
 ---
 

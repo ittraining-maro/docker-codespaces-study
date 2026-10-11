@@ -1339,7 +1339,7 @@ curl -s localhost:8000/version   # git_sha=dev：本地建置沒有版本身分
 
 **注意 `git_sha=dev` 這個事實**：映像雖然已經是完整的成品形式，但它是在你的開發機上、用工作目錄建置的，**包含尚未 commit 的修改**，所以它沒有、也不可能有版本身分。它仍屬於 Inner Loop；要成為可交付、可追溯的成品，必須交給 8.5 之後的 CI/CD 在乾淨環境中建置。
 
-改完程式後重跑的循環：
+改完程式後重跑的循環（需要時才執行；第一次照順序練習可以跳過）：
 
 ```bash
 REPO="$(git rev-parse --show-toplevel)"   # 開新終端機時需重設
@@ -1363,6 +1363,8 @@ gh pr create --fill              # 或在 GitHub 網頁按 Compare & pull reques
 2. `git status` 顯示 working tree clean，且 `dev.env` 從未出現在任何 commit 中
 3. PR 頁面看得到完整的檔案異動
 4. 用手機行動網路（未登入 GitHub）能打開 Public 網址並得到回覆
+
+> 若手機打開時要求登入 GitHub，代表 8000 埠的公開設定沒有保留（容器由 7.7 的 `ai-dev` 換成 8.3 的 `ai-demo`）：到 **Ports** 分頁把 8000 重新設為 **Public**（做法同 7.8），再試一次。
 
 > **commit message 慣例（Conventional Commits）**：`feat:` 新功能、`fix:` 修錯、`chore:` 雜務、`build:` 建置相關、`ci:` 流水線、`docs:` 文件。面試官看 commit 歷史就能判斷這個人有沒有受過工程訓練，**這是作品集的一部分**。
 
@@ -2066,7 +2068,7 @@ docker run --rm -e LLM_PROVIDER=googel ai-demo:dev   # 故意拼錯：容器應�
 
 | 版本 | 日期 | 說明 |
 |---|---|---|
-| 教學手冊 v1.2 | 2026-10-11 | 修正實作銜接：6.6 補上 PR 合併步驟；7.2 開分支前先切回 main；移除 7.7「體驗 `--reload`」練習（非必要，且容易留下未提交的修改，導致 8.6 切換分支失敗），停止容器的步驟移到 7.8 對外公開之後；7.4 `mkdir -p app` 移到建檔前；8.9 對第 9 章部署腳本的提前引用移至 9.6；7.1 Inner Loop 敘述改為與第 7 章「掛載原始碼、不 build」的做法一致；9.10 驗收去重；7.8 待實測項目移至附錄 D；8.7 與 9.9 改以 `gh pr checks --watch && gh pr merge` 串接，CI 未通過或尚未開始時不會合併；8.8 補上「等 main 的 CI 完成後 package 才會出現」、9.5 補上金鑰取得位置、9.9 補上確認 CI 紀錄是新合併的提示；附錄 A.2 補上 `ai-demo:dev` 前提、Ollama 安裝缺少 `zstd` 的處理、systemd 警告說明、重啟後重跑 `ollama serve`、首次回應逾時與啟動等待 |
+| 教學手冊 v1.2 | 2026-10-11 | 修正實作銜接：6.6 補上 PR 合併步驟；7.2 開分支前先切回 main；移除 7.7「體驗 `--reload`」練習（非必要，且容易留下未提交的修改，導致 8.6 切換分支失敗），停止容器的步驟移到 7.8 對外公開之後；7.4 `mkdir -p app` 移到建檔前；8.9 對第 9 章部署腳本的提前引用移至 9.6；7.1 Inner Loop 敘述改為與第 7 章「掛載原始碼、不 build」的做法一致；9.10 驗收去重；7.8 待實測項目移至附錄 D；8.7 與 9.9 改以 `gh pr checks --watch && gh pr merge` 串接，CI 未通過或尚未開始時不會合併；8.8 補上「等 main 的 CI 完成後 package 才會出現」、9.5 補上金鑰取得位置、9.9 補上確認 CI 紀錄是新合併的提示；8.3 重跑循環標示為「需要時才執行」、8.4 補上 Public 設定未保留時的處理；附錄 A.2 補上 `ai-demo:dev` 前提、Ollama 安裝缺少 `zstd` 的處理、systemd 警告說明、重啟後重跑 `ollama serve`、首次回應逾時與啟動等待 |
 | 教學手冊 v1.1 | 2026-10-02 | 依講師實測，主力模型由 Gemma 4 改為 Gemini 3.x Flash-Lite，Gemma 4 降為備援；新增 4.2 模型選擇表；`LLM_MERGE_SYSTEM` 預設改為 `auto`，依模型自動判斷 |
 | 教學手冊 v1.0 | 2026-10-02 | 依課綱教學大綱 1～9 項重新編排《教學平台上手手冊 v6.0》；新增第 1、2 章觀念內容、第 6 章 Ubuntu CLI 入門、第 7 章「掛載原始碼以容器直接執行」 |
 | 上手手冊 v6.0 | 2026-10-02 | 部署段落改以 `make-env.sh`、`deploy.sh` 兩支經測試的腳本承擔 |
