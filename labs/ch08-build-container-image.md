@@ -443,6 +443,8 @@ git switch main && git pull
 
 ## F. 讓映像可被取用
 
+⚠️ package 要等 8-12 合併後 **main 的 CI 跑完**（約 1～3 分鐘）才會出現。可在 repo 的 **Actions** 分頁確認最新一筆已顯示綠色勾勾，再進行下面的操作。
+
 先在網頁操作：GitHub 個人頁面 → **Packages** 分頁 → 選這個 package → **Package settings** → **Change visibility** → **Public**。
 
 ### 8-14 驗證不登入也能拉取映像

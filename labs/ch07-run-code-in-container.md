@@ -537,6 +537,8 @@ export MODEL="gemini-3.x-flash-lite"
 | `chmod 600 "$REPO/dev.env"` | 設為只有自己能讀寫，保護金鑰 |
 | `git status --short` | 簡短列出變更；**`dev.env` 不應出現**，證明 `.gitignore` 的 `*.env` 生效 |
 
+⚠️ 請在 **7-12 同一個終端機分頁**執行。換了分頁的話 `$MODEL` 會是空的，寫出的 `LLM_MODEL=` 沒有值，7-14 的容器會一啟動就因為 `ConfigError` 退出；這時回到 7-12 重新設定，再執行一次本題即可。
+
 **為什麼要寫成設定檔**：之後啟動容器時用 `--env-file` 一次注入，不必每次手打一長串 `-e`（手打正是漏設參數、默默掉進 mock 的主因）。
 
 **複製貼上**：
@@ -638,7 +640,7 @@ curl -s -X POST localhost:8000/api/ask -H 'Content-Type: application/json' -d '{
 ```
 
 > 改程式碼不需要重新建置任何東西——這就是 Inner Loop 的速度。
-> ⚠️ 體驗完請把 `SYSTEM_PROMPT` 改回原值並存檔，否則下一章 7-17 的 `git status` 會出現未提交的變更。
+> ⚠️ 體驗完請把 `SYSTEM_PROMPT` 改回原值並存檔，否則本章最後的 7-17 驗收 會出現未提交的變更。
 
 完成後回到第一個終端機，按 `Ctrl+C` 停止容器。
 

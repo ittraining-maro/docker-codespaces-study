@@ -340,7 +340,7 @@ bash ~/deploy/make-env.sh
 | 提示 | 輸入什麼 | 說明 |
 |---|---|---|
 | `image 路徑` | 9-1 時在 Packages 頁面看到的 `docker pull ghcr.io/...` **整行貼上** | 腳本會自動去掉 `docker pull`、tag，並轉成小寫 |
-| `API key` | Google AI Studio 的金鑰 | 輸入時畫面不顯示任何字元，這是正常的 |
+| `API key` | Google AI Studio 的金鑰：到 Google AI Studio 的 **API Keys** 頁面複製 | 部署機沒有 Codespaces Secret，必須手動貼上；輸入時畫面不顯示任何字元，這是正常的 |
 | `model ID` | 第 4 章取得的 model ID | 不用加引號；多餘的引號與 `models/` 前綴會被自動清除 |
 
 看到 `✅ 設定完成` 並列出三項摘要即可。之後要換金鑰或模型，重新執行這一行；**不想改的項目直接按 Enter** 保留原值。不要用編輯器手動修改 `prod.env`。
@@ -380,6 +380,8 @@ bash ~/deploy/deploy.sh <SHA>
 ```
 
 想用瀏覽器看畫面：下方 **Ports** 分頁 → 8000 → 點地球圖示。
+
+📝 **請把這次部署的 SHA 記下來**（例如貼在記事本），9-14 回溯時要用。
 
 ---
 
@@ -508,6 +510,8 @@ gh pr checks --watch && gh pr merge --merge --delete-branch
 | `git switch main && git pull` | 切回 main 並同步合併結果 |
 | `git rev-parse HEAD` | 顯示新版的 SHA → **複製下來** |
 | `gh run list --branch main --limit 1` | 等到 `completed` / `success` 才繼續，否則新映像還沒推上去 |
+
+⚠️ 剛合併完時，新的 CI 可能還沒排入佇列，列出的會是**上一次**已完成的紀錄。請確認這一筆的標題含有 `feat/new-prompt`（也就是剛才的合併），而且狀態是 `completed` / `success`；不是的話，等 10～20 秒再執行一次 `gh run list --branch main --limit 1`。
 
 **複製貼上**：
 
