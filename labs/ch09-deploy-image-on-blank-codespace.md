@@ -452,6 +452,12 @@ git switch -c feat/new-prompt
 code app/main.py
 ```
 
+⚠️ **若出現 `fatal: a branch named 'feat/new-prompt' already exists`**：代表這條分支之前已經建立過，這次沒有切換成功，你仍停在 main。請貼下面這行切過去，確認 `git branch --show-current` 顯示 `feat/new-prompt` 後再進行下面的修改（不要在 main 上繼續）：
+
+```bash
+git switch feat/new-prompt
+```
+
 **接著手動修改**：把 `SYSTEM_PROMPT` 的預設值改成看得出差異的內容，例如加上「回答時以『您好』開頭」，存檔。
 
 ---

@@ -58,6 +58,12 @@ git switch -c feat/ai-demo
 git status
 ```
 
+⚠️ **若出現 `fatal: a branch named 'feat/ai-demo' already exists`**：代表這條分支之前已經建立過，這次沒有切換成功，你仍停在 main。請貼下面這行切過去，確認 `git branch --show-current` 顯示 `feat/ai-demo` 後再進行 7-2（不要在 main 上繼續）：
+
+```bash
+git switch feat/ai-demo
+```
+
 ---
 
 ## B. 先寫 `.gitignore` 與 `.dockerignore`
@@ -584,6 +590,12 @@ git status --short
 | `--reload` | 偵測到程式碼變更時自動重啟服務 |
 
 ⚠️ 這個指令會**佔住目前的終端機**持續顯示 log。看到 `Application startup complete` 後，請**另開一個終端機分頁**執行下一步。
+
+⚠️ 若出現 `The container name "/ai-dev" is already in use`：代表之前啟動的容器還在（例如不小心關掉了終端機）。先貼下面這行移除它，再重貼一次本題：
+
+```bash
+docker rm -f ai-dev
+```
 
 **複製貼上**：
 

@@ -141,6 +141,8 @@ docker logs ai-demo
 ```
 
 > 容器啟動需要 2～3 秒。若 `docker logs` 還沒顯示含 `mode=live` 的 `startup` 訊息，稍等再單獨執行一次 `docker logs ai-demo` 即可。
+>
+> 若出現 `The container name "/ai-demo" is already in use`：代表之前已經啟動過，改執行 8-6（會先移除舊容器再重建）。
 
 ---
 
@@ -270,6 +272,12 @@ git switch main && git pull
 git switch -c ci/pipeline
 mkdir -p .github/workflows
 code .github/workflows/ci.yml
+```
+
+⚠️ **若出現 `fatal: a branch named 'ci/pipeline' already exists`**：代表這條分支之前已經建立過，這次沒有切換成功，你仍停在 main。請貼下面這行切過去，確認 `git branch --show-current` 顯示 `ci/pipeline` 後再進行 8-10（不要在 main 上繼續）：
+
+```bash
+git switch ci/pipeline
 ```
 
 ---
