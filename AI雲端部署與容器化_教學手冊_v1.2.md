@@ -920,6 +920,8 @@ git status                      # 確認分支已切換、工作目錄乾淨
 
 ⚠️ **一定要先切回 main**：做完第 6 章後，學員通常還停在 `feature/hello`。若直接開分支，`feat/ai-demo` 會疊在 `feature/hello` 上，7.8 驗收的 commit 數就會對不上。
 
+⚠️ **重貼的風險**：學員不確定是否成功而再貼一次時，`git switch -c` 會因分支已存在而失敗（`fatal: a branch named 'feat/ai-demo' already exists`），**人卻停在 main 上**，接下來的 commit 都會進到 main。此時改用 `git switch feat/ai-demo` 切過去即可。8.7 的 `ci/pipeline`、9.9 的 `feat/new-prompt` 同理。
+
 **為什麼不直接在 main 上開發**：main 代表「隨時可交付的狀態」。在分支上開發，才能用 PR 做審查，也才能在改壞時直接丟掉分支。
 
 ### 7.3 先寫 `.gitignore` 與 `.dockerignore`
@@ -1337,6 +1339,8 @@ curl -s localhost:8000/healthz
 curl -s localhost:8000/version   # git_sha=dev：本地建置沒有版本身分
 ```
 
+> 容器啟動需要 2～3 秒，緊接在 `docker run -d` 之後的 `docker logs` 常常還是空的、`curl` 也可能回 `Connection refused`。稍等再執行一次即可，不代表失敗。
+
 **注意 `git_sha=dev` 這個事實**：映像雖然已經是完整的成品形式，但它是在你的開發機上、用工作目錄建置的，**包含尚未 commit 的修改**，所以它沒有、也不可能有版本身分。它仍屬於 Inner Loop；要成為可交付、可追溯的成品，必須交給 8.5 之後的 CI/CD 在乾淨環境中建置。
 
 改完程式後重跑的循環（需要時才執行；第一次照順序練習可以跳過）：
@@ -1407,6 +1411,8 @@ git switch main && git pull           # 讓本地 main 跟上遠端
 git switch -c ci/pipeline             # 從最新的 main 開新分支
 mkdir -p .github/workflows            # 接著建立下方的 ci.yml
 ```
+
+> 若出現 `fatal: a branch named 'ci/pipeline' already exists`（重貼所致），改用 `git switch ci/pipeline`，不要在 main 上繼續（見 7.2）。
 
 ```yaml
 name: ci
@@ -1848,6 +1854,8 @@ git rev-parse HEAD                     # 新版的 SHA → 複製下來
 gh run list --branch main --limit 1    # 等到 completed / success 才繼續
 ```
 
+> 若 `git switch -c feat/new-prompt` 出現 `already exists`（重貼所致），改用 `git switch feat/new-prompt` 後再修改 `app/main.py`（見 7.2）。
+
 ⚠️ 剛合併完時，新的 CI 可能還沒排入佇列，列出的會是**上一次**已完成的紀錄。請確認這一筆的標題含有 `feat/new-prompt`（也就是剛才的合併），而且狀態是 `completed` / `success`；不是的話，等 10～20 秒再查一次。
 
 #### 步驟 2【部署機】部署新版
@@ -2072,7 +2080,7 @@ docker run --rm -e LLM_PROVIDER=googel ai-demo:dev   # 故意拼錯：容器應�
 
 | 版本 | 日期 | 說明 |
 |---|---|---|
-| 教學手冊 v1.2 | 2026-10-11 | 修正實作銜接：6.6 補上 PR 合併步驟；7.2 開分支前先切回 main；移除 7.7「體驗 `--reload`」練習（非必要，且容易留下未提交的修改，導致 8.6 切換分支失敗），停止容器的步驟移到 7.8 對外公開之後；7.4 `mkdir -p app` 移到建檔前；8.9 對第 9 章部署腳本的提前引用移至 9.6；7.1 Inner Loop 敘述改為與第 7 章「掛載原始碼、不 build」的做法一致；9.10 驗收去重；7.8 待實測項目移至附錄 D；8.7 與 9.9 改以 `gh pr checks --watch && gh pr merge` 串接，CI 未通過或尚未開始時不會合併；8.8 補上「等 main 的 CI 完成後 package 才會出現」、9.5 補上金鑰取得位置、9.9 補上確認 CI 紀錄是新合併的提示；8.3 重跑循環標示為「需要時才執行」、8.4 補上 Public 設定未保留時的處理；8.9 補上「等 tag 的 CI 跑完才看得到版本號」；第 9 章開頭補上開發機須在 repo 根目錄執行；附錄 A.2 補上 `ai-demo:dev` 前提、Ollama 安裝缺少 `zstd` 的處理、systemd 警告說明、重啟後重跑 `ollama serve`、首次回應逾時與啟動等待 |
+| 教學手冊 v1.2 | 2026-10-11 | 修正實作銜接：6.6 補上 PR 合併步驟；7.2 開分支前先切回 main；移除 7.7「體驗 `--reload`」練習（非必要，且容易留下未提交的修改，導致 8.6 切換分支失敗），停止容器的步驟移到 7.8 對外公開之後；7.4 `mkdir -p app` 移到建檔前；8.9 對第 9 章部署腳本的提前引用移至 9.6；7.1 Inner Loop 敘述改為與第 7 章「掛載原始碼、不 build」的做法一致；9.10 驗收去重；7.8 待實測項目移至附錄 D；8.7 與 9.9 改以 `gh pr checks --watch && gh pr merge` 串接，CI 未通過或尚未開始時不會合併；8.8 補上「等 main 的 CI 完成後 package 才會出現」、9.5 補上金鑰取得位置、9.9 補上確認 CI 紀錄是新合併的提示；8.3 重跑循環標示為「需要時才執行」、8.4 補上 Public 設定未保留時的處理；8.9 補上「等 tag 的 CI 跑完才看得到版本號」；第 9 章開頭補上開發機須在 repo 根目錄執行；7.2、8.7、9.9 補上重貼 `git switch -c` 時會停在 main 的說明與補救；8.3 補上 `docker run -d` 後立即 `docker logs` 可能為空的說明；附錄 A.2 補上 `ai-demo:dev` 前提、Ollama 安裝缺少 `zstd` 的處理、systemd 警告說明、重啟後重跑 `ollama serve`、首次回應逾時與啟動等待 |
 | 教學手冊 v1.1 | 2026-10-02 | 依講師實測，主力模型由 Gemma 4 改為 Gemini 3.x Flash-Lite，Gemma 4 降為備援；新增 4.2 模型選擇表；`LLM_MERGE_SYSTEM` 預設改為 `auto`，依模型自動判斷 |
 | 教學手冊 v1.0 | 2026-10-02 | 依課綱教學大綱 1～9 項重新編排《教學平台上手手冊 v6.0》；新增第 1、2 章觀念內容、第 6 章 Ubuntu CLI 入門、第 7 章「掛載原始碼以容器直接執行」 |
 | 上手手冊 v6.0 | 2026-10-02 | 部署段落改以 `make-env.sh`、`deploy.sh` 兩支經測試的腳本承擔 |
