@@ -226,6 +226,20 @@ gh pr create --fill
 
 > 若手機打開時要求登入 GitHub，代表 8000 埠的公開設定沒有保留：到 **Ports** 分頁，在 8000 上按右鍵 → **Port Visibility** → **Public**（做法同第 7 章 G 單元），再試一次。
 
+**收尾：停止並移除 `ai-demo` 容器**（驗收第 4 項完成後再執行）
+
+`ai-demo` 是用 `-d` 在背景啟動的，不會自己停止；之後的練習都用不到它，繼續執行只會佔用開發機的 CPU 與記憶體。
+
+| 指令 | 意義 |
+|---|---|
+| `docker rm -f ai-demo` | 強制停止並刪除 `ai-demo` 容器（映像 `ai-demo:dev` 仍會保留） |
+
+**複製貼上**：
+
+```bash
+docker rm -f ai-demo
+```
+
 ---
 
 ## D. 先把開發分支的 PR 合併

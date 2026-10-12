@@ -1374,6 +1374,12 @@ gh pr create --fill              # 或在 GitHub 網頁按 Compare & pull reques
 
 > 若手機打開時要求登入 GitHub，代表 8000 埠的公開設定沒有保留（容器由 7.7 的 `ai-dev` 換成 8.3 的 `ai-demo`）：到 **Ports** 分頁把 8000 重新設為 **Public**（做法同 7.8），再試一次。
 
+**收尾**：驗收完成後，移除在背景執行的 `ai-demo` 容器。它是用 `-d` 啟動的，不會自己停止，之後的章節也用不到：
+
+```bash
+docker rm -f ai-demo             # 強制停止並刪除容器；映像 ai-demo:dev 仍保留
+```
+
 > **commit message 慣例（Conventional Commits）**：`feat:` 新功能、`fix:` 修錯、`chore:` 雜務、`build:` 建置相關、`ci:` 流水線、`docs:` 文件。面試官看 commit 歷史就能判斷這個人有沒有受過工程訓練，**這是作品集的一部分**。
 
 ### 8.5 Outer Loop：交付流程概觀
@@ -1620,6 +1626,8 @@ echo "${LLM_API_KEY:-（空）}"   # 顯示「（空）」：Secret 綁定 repo�
 mkdir -p ~/deploy
 code ~/deploy/make-env.sh
 ```
+
+> ℹ️ 左側 Explorer 看不到 `~/deploy` 是正常的：Explorer 只顯示工作區（`/workspaces/…`），`~/deploy` 在家目錄。部署工具與金鑰刻意放在工作區之外；想在 Explorer 看到，可執行 `code -a ~/deploy` 把它加進工作區（選用）。
 
 把下面的內容貼到剛開啟的 `make-env.sh` 分頁並存檔（`Ctrl+S`）：
 
@@ -2103,7 +2111,7 @@ docker run --rm -e LLM_PROVIDER=googel ai-demo:dev   # 故意拼錯：容器應�
 
 | 版本 | 日期 | 說明 |
 |---|---|---|
-| 教學手冊 v1.2 | 2026-10-11 | 修正實作銜接：6.6 補上 PR 合併步驟；7.2 開分支前先切回 main；移除 7.7「體驗 `--reload`」練習（非必要，且容易留下未提交的修改，導致 8.6 切換分支失敗），停止容器的步驟移到 7.8 對外公開之後；7.4 `mkdir -p app` 移到建檔前；8.9 對第 9 章部署腳本的提前引用移至 9.6；7.1 Inner Loop 敘述改為與第 7 章「掛載原始碼、不 build」的做法一致；9.10 驗收去重；7.8 待實測項目移至附錄 D；8.7 與 9.9 改以 `gh pr checks --watch && gh pr merge` 串接，CI 未通過或尚未開始時不會合併；8.8 補上「等 main 的 CI 完成後 package 才會出現」、9.5 補上金鑰取得位置、9.9 補上確認 CI 紀錄是新合併的提示；8.3 重跑循環標示為「需要時才執行」、8.4 補上 Public 設定未保留時的處理；8.9 補上「等 tag 的 CI 跑完才看得到版本號」；第 9 章開頭補上開發機須在 repo 根目錄執行；7.2、8.7、9.9 補上重貼 `git switch -c` 時會停在 main 的說明與補救；8.3 補上 `docker run -d` 後立即 `docker logs` 可能為空的說明；7.7、8.3 補上容器名稱已被使用時的處理；9.4 兩支腳本改為「用 `code` 開啟檔案，貼到編輯器存檔」，不再用 here-document 貼進終端機；附錄 A.2 補上 `ai-demo:dev` 前提、Ollama 安裝缺少 `zstd` 的處理、systemd 警告說明、重啟後重跑 `ollama serve`、首次回應逾時與啟動等待 |
+| 教學手冊 v1.2 | 2026-10-11 | 修正實作銜接：6.6 補上 PR 合併步驟；7.2 開分支前先切回 main；移除 7.7「體驗 `--reload`」練習（非必要，且容易留下未提交的修改，導致 8.6 切換分支失敗），停止容器的步驟移到 7.8 對外公開之後；7.4 `mkdir -p app` 移到建檔前；8.9 對第 9 章部署腳本的提前引用移至 9.6；7.1 Inner Loop 敘述改為與第 7 章「掛載原始碼、不 build」的做法一致；9.10 驗收去重；7.8 待實測項目移至附錄 D；8.7 與 9.9 改以 `gh pr checks --watch && gh pr merge` 串接，CI 未通過或尚未開始時不會合併；8.8 補上「等 main 的 CI 完成後 package 才會出現」、9.5 補上金鑰取得位置、9.9 補上確認 CI 紀錄是新合併的提示；8.3 重跑循環標示為「需要時才執行」、8.4 補上 Public 設定未保留時的處理；8.9 補上「等 tag 的 CI 跑完才看得到版本號」；第 9 章開頭補上開發機須在 repo 根目錄執行；7.2、8.7、9.9 補上重貼 `git switch -c` 時會停在 main 的說明與補救；8.3 補上 `docker run -d` 後立即 `docker logs` 可能為空的說明；7.7、8.3 補上容器名稱已被使用時的處理；9.4 兩支腳本改為「用 `code` 開啟檔案，貼到編輯器存檔」，不再用 here-document 貼進終端機，並說明 Explorer 看不到 `~/deploy` 的原因；8.4 驗收後補上移除背景容器 `ai-demo` 的收尾步驟；附錄 A.2 補上 `ai-demo:dev` 前提、Ollama 安裝缺少 `zstd` 的處理、systemd 警告說明、重啟後重跑 `ollama serve`、首次回應逾時與啟動等待 |
 | 教學手冊 v1.1 | 2026-10-02 | 依講師實測，主力模型由 Gemma 4 改為 Gemini 3.x Flash-Lite，Gemma 4 降為備援；新增 4.2 模型選擇表；`LLM_MERGE_SYSTEM` 預設改為 `auto`，依模型自動判斷 |
 | 教學手冊 v1.0 | 2026-10-02 | 依課綱教學大綱 1～9 項重新編排《教學平台上手手冊 v6.0》；新增第 1、2 章觀念內容、第 6 章 Ubuntu CLI 入門、第 7 章「掛載原始碼以容器直接執行」 |
 | 上手手冊 v6.0 | 2026-10-02 | 部署段落改以 `make-env.sh`、`deploy.sh` 兩支經測試的腳本承擔 |

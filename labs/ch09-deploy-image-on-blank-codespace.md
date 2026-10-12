@@ -141,6 +141,12 @@ mkdir -p ~/deploy
 code ~/deploy/make-env.sh
 ```
 
+ℹ️ **左側檔案管理器（Explorer）看不到 `~/deploy` 是正常的**：Explorer 只顯示工作區資料夾（`/workspaces/…`），而 `~/deploy` 在家目錄、不在工作區內；`code` 指令仍會直接開啟檔案。部署工具和金鑰本來就不該放在工作區裡。若想在 Explorer 看到它，可執行下面這行（選用），把 `~/deploy` 加進工作區：
+
+```bash
+code -a ~/deploy
+```
+
 **步驟 2：把腳本貼到編輯器並存檔**（貼到剛開啟的 `make-env.sh` 分頁，不是貼到終端機）
 
 **腳本意義**：
