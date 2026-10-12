@@ -470,6 +470,16 @@ docker inspect prod --format '{{range .Config.Env}}{{println .}}{{end}}' \
 
 **先不要刪除部署機**。若中途關掉分頁：`https://github.com/codespaces` → 找到標示為 unpublished 的那一台 → 右側「**…**」→ **Open in browser**。重新打開後不需要重設任何變數，所有設定都存在 `~/deploy/` 的檔案裡。
 
+ℹ️ **（選用）手動關閉部署的容器**：課程流程**不需要**這一步。之後每次執行 `deploy.sh` 都會自動移除舊的 `prod` 容器再建立新的，9-15 刪除部署機時容器也會一起消失；codespace 停止時容器同樣會停止。若你想在中途手動關閉服務，在部署機執行：
+
+| 指令 | 意義 |
+|---|---|
+| `docker rm -f prod` | 強制停止並刪除部署的 `prod` 容器；之後要再上線，重新執行 `bash ~/deploy/deploy.sh <SHA>` 即可 |
+
+```bash
+docker rm -f prod
+```
+
 ---
 
 ## I. 版本回溯（rollback）
